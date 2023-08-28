@@ -20,7 +20,7 @@ const config: Config = {
       },
       width: {
         docW: '8.5in',
-        regForm: '420px'
+        regForm: '560px'
       },
       padding: {
         docPad: '1in'

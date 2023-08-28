@@ -1,0 +1,7 @@
+{
+    "environment": "dev",
+    "port": 4000,
+    "api_key": "a1b2c33d4e5f6g7h8i9jakblc",
+    "docuHubApiURL": "http://localhost:8000/",
+    "authTokenCookieName": "AUTH_TOKEN"
+}

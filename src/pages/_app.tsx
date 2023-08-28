@@ -5,16 +5,28 @@ import theme from '../theme/themeConfig'; // antd theme config
 import 'tailwindcss/tailwind.css';
 import '@styles/stylesglobals.css';
 
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  HttpLink
+} from '@apollo/client';
 
-const client = new ApolloClient({
-  uri: 'https://countries.trevorblades.com',
-  cache: new InMemoryCache()
-});
+const createGraphqlClient = () => {
+  const GqlServerLink = new HttpLink({
+    uri: 'http://localhost:3000/api/graphql',
+    credentials: 'include'
+  });
+
+  return new ApolloClient({
+    link: GqlServerLink,
+    cache: new InMemoryCache()
+  });
+};
 
 const DocuHub = ({ Component, pageProps }: AppProps): JSX.Element => (
   <ConfigProvider theme={theme}>
-    <ApolloProvider client={client}>
+    <ApolloProvider client={createGraphqlClient()}>
       <Component {...pageProps} />
     </ApolloProvider>
   </ConfigProvider>
