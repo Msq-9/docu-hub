@@ -25,7 +25,14 @@
     "paths": {
       "@components/*": ["./src/components/*"],
       "@styles/*": ["./src/styles/*"],
-      "@hooks/*": ["./src/hooks/*"]
+      "@hooks/*": ["./src/hooks/*"],
+      "@schema/*": ["./src/graphql/schema/*"],
+      "@operations/*": ["./src/graphql/operations/*"],
+      "@directives/*": ["./src/graphql/directives/*"],
+      "@resolvers/*": ["./src/resolvers/*"],
+      "@clients/*": ["./src/clients/*"],
+      "@datasources/*": ["./src/datasources/*"],
+      "@utils/*": ["./src/utils/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

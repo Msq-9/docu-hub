@@ -1,20 +1,51 @@
-// The ApolloServer constructor requires two parameters: your schema
-
 import { ApolloServer } from '@apollo/server';
-import { startStandaloneServer } from '@apollo/server/standalone';
+import { Context } from '@apollo/client';
+import { startServerAndCreateNextHandler } from '@as-integrations/next';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import userSchema from '@schema/user';
+import { userResolver } from '@resolvers/users';
+import authDirective from '@directives/authDirective';
+import { NextApiRequest, NextApiResponse } from 'next';
+import AuthClient from '@clients/auth';
+import config from 'config';
+import DocuHubApi from '@datasources/DocuHubApi';
 
-// definition and your set of resolvers.
-const server = new ApolloServer({
-  typeDefs: [],
-  resolvers: []
+interface GraphQlContext extends Context {
+  req: NextApiRequest;
+  res: NextApiResponse;
+}
+
+const authClient = new AuthClient();
+
+const { authDirectiveTypeDefs, authDirectiveTransformer } =
+  authDirective(authClient);
+
+const schema = makeExecutableSchema({
+  typeDefs: [authDirectiveTypeDefs, userSchema],
+  resolvers: [userResolver]
 });
 
-// Passing an ApolloServer instance to the `startStandaloneServer` function:
-//  1. creates an Express app
-//  2. installs your ApolloServer instance as middleware
-//  3. prepares your app to handle incoming requests
-const { url } = await startStandaloneServer(server, {
-  listen: { port: 4000 }
+const apolloServer = new ApolloServer<GraphQlContext>({
+  schema: authDirectiveTransformer(schema)
 });
 
-console.log(`🚀  Server ready at: ${url}`);
+export default startServerAndCreateNextHandler(apolloServer, {
+  // required to update req/res headers at graphql resolvers and clients
+  context: async (req: NextApiRequest, res: NextApiResponse) => {
+    // Add auth token from cookies to request header
+    const authCookie = req.cookies[config.get('authTokenCookieName') as string];
+    req.headers = {
+      ...req.headers,
+      authorization: req.headers['authorization'] || authCookie
+    };
+    return {
+      datasources: {
+        docuHubApi: new DocuHubApi({
+          token: req.headers.authorization || ''
+        })
+      },
+      req,
+      res
+    };
+  }
+});

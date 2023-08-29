@@ -10,7 +10,6 @@ const FontFamily = ({ editor }: { editor: Editor | null }) => {
   const [currFont, setCurrFont] = useState<number>(1);
 
   const onMenuClick = (menuInfo: any) => {
-    console.log(menuInfo);
     if (editor) {
       editor
         .chain()
