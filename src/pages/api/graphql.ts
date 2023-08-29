@@ -8,6 +8,7 @@ import authDirective from '@directives/authDirective';
 import { NextApiRequest, NextApiResponse } from 'next';
 import AuthClient from '@clients/auth';
 import config from 'config';
+import DocuHubApi from '@datasources/DocuHubApi';
 
 interface GraphQlContext extends Context {
   req: NextApiRequest;
@@ -38,6 +39,11 @@ export default startServerAndCreateNextHandler(apolloServer, {
       authorization: req.headers['authorization'] || authCookie
     };
     return {
+      datasources: {
+        docuHubApi: new DocuHubApi({
+          token: req.headers.authorization || ''
+        })
+      },
       req,
       res
     };

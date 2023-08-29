@@ -15,7 +15,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       res.setHeader('Set-Cookie', [
         `${config.get('authTokenCookieName')}=${
           loginRes.token
-        }; HttpOnly; Path=/;` // Usgng httpOnly to restrict access to browser side javascript for security reasons
+        }; HttpOnly; Path=/;` // Using httpOnly to restrict access to browser-side scripts for security reasons
       ]);
 
       return res.status(200).json(loginRes);

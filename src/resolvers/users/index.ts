@@ -1,11 +1,10 @@
 import { Resolvers, User } from '@schema//types';
 
-const handler = () => {};
-
 export const userResolver: Resolvers = {
   Query: {
-    user: (parent, args, contextValue, info): User => {
-      return { id: 'mmm' };
+    user: async (parent, args, contextValue, info): Promise<User> => {
+      const docuHubApi = contextValue.datasources.docuHubApi;
+      return await docuHubApi.getUserById(args.userId);
     }
   }
 };

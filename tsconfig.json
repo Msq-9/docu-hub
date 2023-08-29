@@ -31,6 +31,7 @@
       "@directives/*": ["./src/graphql/directives/*"],
       "@resolvers/*": ["./src/resolvers/*"],
       "@clients/*": ["./src/clients/*"],
+      "@datasources/*": ["./src/datasources/*"],
       "@utils/*": ["./src/utils/*"]
     }
   },
