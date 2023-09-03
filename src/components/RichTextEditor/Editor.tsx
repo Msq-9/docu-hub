@@ -1,7 +1,7 @@
 'use client';
-import React, { type CSSProperties } from 'react';
+import React, { useState, type CSSProperties } from 'react';
 import { EditorContent } from '@tiptap/react';
-import TopMenuBar from '@components/RichTextEditor/ToolMenu/ToolMenuBar';
+import TopMenuBar from '@components/richTextEditor/ToolMenu/ToolMenuBar';
 import { useEditor, type Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
@@ -10,8 +10,23 @@ import TextAlign from '@tiptap/extension-text-align';
 import FontFamily from '@tiptap/extension-font-family';
 import TextStyle from '@tiptap/extension-text-style';
 import TopNavigationContainer from '@components/TopNavigationContainer';
+import { Input } from 'antd';
+import { Document } from '@schema/types';
+import { useMutation } from '@apollo/client';
+import { updateRichTextDocument } from '@operations/document';
+import { useRouter } from 'next/router';
 
-const Tiptap = (): JSX.Element | null => {
+const RichTextEditor = ({
+  documentData
+}: {
+  documentData: Document;
+}): JSX.Element | null => {
+  const [rtDocName, setRTDocName] = useState<string>(
+    documentData.title as string
+  );
+
+  const [updateRTDocument] = useMutation(updateRichTextDocument);
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -58,6 +73,25 @@ const Tiptap = (): JSX.Element | null => {
           <TopMenuBar editor={editor} />
         </div>
       </TopNavigationContainer>
+      <div className="mx-auto w-96 mb-5">
+        <Input
+          className="text-center"
+          value={rtDocName}
+          bordered={false}
+          onChange={(evt) => {
+            evt.preventDefault();
+            setRTDocName(evt.target.value);
+          }}
+          onBlur={async (evt) => {
+            evt.preventDefault();
+            await updateRTDocument({
+              variables: {
+                documentInput: { title: evt.target.value, id: documentData.id }
+              }
+            });
+          }}
+        />
+      </div>
       <div>
         <EditorContent editor={editor} />
       </div>
@@ -65,4 +99,4 @@ const Tiptap = (): JSX.Element | null => {
   );
 };
 
-export default Tiptap;
+export default RichTextEditor;

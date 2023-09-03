@@ -1,9 +1,6 @@
 import { AugmentedRequest, RESTDataSource } from '@apollo/datasource-rest';
-import {
-  DataSourceConfig,
-  ValueOrPromise
-} from '@apollo/datasource-rest/dist/RESTDataSource';
-import { User } from '@schema/types';
+import { ValueOrPromise } from '@apollo/datasource-rest/dist/RESTDataSource';
+import { Document, DocumentInput, User } from '@schema/types';
 import config from 'config';
 
 class DocuHubAPI extends RESTDataSource {
@@ -25,8 +22,31 @@ class DocuHubAPI extends RESTDataSource {
     return this.get<User>(`users/${userId}`);
   }
 
+  async getRichTextDocById(docId: string): Promise<Document> {
+    return this.get<Document>(`documents/${docId}`);
+  }
+
+  async getDocumentsByUser(userId: string): Promise<Array<Document>> {
+    return await this.get<Array<Document>>(`users/${userId}/documents`);
+  }
+
   async getAllUsers(): Promise<Array<User>> {
     return this.get<Array<User>>('users');
+  }
+
+  async createDocument(title: string): Promise<Document> {
+    return this.post<Document>('documents', { body: { title } });
+  }
+
+  async updateDocument(documentData: DocumentInput): Promise<Document> {
+    return this.put<Document>(`documents/${documentData.id}`, {
+      body: { title: documentData.title }
+    });
+  }
+
+  async deleteDocument(docId: string): Promise<boolean> {
+    const res = await this.delete(`documents/${docId}`);
+    return res.status === 204;
   }
 }
 

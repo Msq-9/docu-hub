@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { LockOutlined, UserOutlined, CopyTwoTone } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
+import React, { useCallback, useState } from 'react';
+import { Alert, Button, Form, Input } from 'antd';
+import { useRouter } from 'next/router';
 
 const formItemLayout = {
   labelCol: {
@@ -26,12 +26,53 @@ const tailFormItemLayout = {
   }
 };
 
-const RegistrationForm = ({
-  onSubmit
-}: {
-  onSubmit: (values: any) => void;
-}) => {
+const RegistrationForm = () => {
   const [form] = Form.useForm();
+  // Watch all form values
+  const values = Form.useWatch([], form);
+
+  const router = useRouter();
+  const [hasError, sethasError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [enableSubmit, setEnableSubmit] = useState(false);
+
+  React.useEffect(() => {
+    form.validateFields({ validateOnly: true }).then(
+      () => {
+        setEnableSubmit(true);
+      },
+      () => {
+        setEnableSubmit(false);
+      }
+    );
+  }, [values]);
+
+  const onSubmit = useCallback(async (values: Record<string, string>) => {
+    const res = await fetch('api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        firstname: values.firstname,
+        lastname: values.lastname,
+        email: values.email,
+        password: values.password
+      })
+    });
+
+    const resBody = await res.json();
+
+    if (res.status === 200) {
+      sethasError(false);
+      router.push('/documents');
+    } else if (res.status === 400) {
+      sethasError(true);
+      setErrorMsg(resBody?.message);
+    } else {
+      sethasError(true);
+      setErrorMsg('Unable to register! Please try again.');
+    }
+  }, []);
+
   return (
     <div className="bg-gray-100 my-52 mx-auto flex justify-center min-w-fit h-fit max-w-2xl rounded-xl">
       <div className="m-auto px-8 py-5">
@@ -41,12 +82,14 @@ const RegistrationForm = ({
         >
           DocuHub
         </div>
-
+        {hasError && (
+          <Alert message={errorMsg} type="error" showIcon className="mb-5" />
+        )}
         <Form
           {...formItemLayout}
           form={form}
           name="register"
-          onFinish={onSubmit}
+          onFinish={(values) => onSubmit(values)}
           initialValues={{}}
           className="w-regForm"
           scrollToFirstError
@@ -131,7 +174,7 @@ const RegistrationForm = ({
             <Input.Password />
           </Form.Item>
           <Form.Item {...tailFormItemLayout}>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" disabled={!enableSubmit}>
               Register
             </Button>
           </Form.Item>

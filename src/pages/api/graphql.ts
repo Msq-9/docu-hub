@@ -3,7 +3,9 @@ import { Context } from '@apollo/client';
 import { startServerAndCreateNextHandler } from '@as-integrations/next';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import userSchema from '@schema/user';
+import documentSchema from '@schema/document';
 import { userResolver } from '@resolvers/users';
+import { documentsResolver } from '@resolvers/documents';
 import authDirective from '@directives/authDirective';
 import { NextApiRequest, NextApiResponse } from 'next';
 import AuthClient from '@clients/auth';
@@ -21,8 +23,8 @@ const { authDirectiveTypeDefs, authDirectiveTransformer } =
   authDirective(authClient);
 
 const schema = makeExecutableSchema({
-  typeDefs: [authDirectiveTypeDefs, userSchema],
-  resolvers: [userResolver]
+  typeDefs: [authDirectiveTypeDefs, userSchema, documentSchema],
+  resolvers: [userResolver, documentsResolver]
 });
 
 const apolloServer = new ApolloServer<GraphQlContext>({

@@ -1,8 +1,14 @@
 import React, { useCallback } from 'react';
-import LoginForm from '@components/Login/LoginForm';
+import LoginForm from '@components/login/LoginForm';
 import { useRouter } from 'next/router';
+import { GetServerSidePropsContext } from 'next';
+import redirectOnAuthenticated from '@utils/redirectOnAuthenticated';
 
 export type LoginFormValues = { username: string; password: string };
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  return redirectOnAuthenticated(ctx);
+};
 
 const Login = () => {
   const router = useRouter();
