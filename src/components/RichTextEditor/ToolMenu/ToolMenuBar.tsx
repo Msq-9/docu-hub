@@ -18,9 +18,10 @@ import Icon, {
 } from '@ant-design/icons';
 
 import { Divider, Button, Popover, Input } from 'antd';
-import HeadingMenu from './HeadingMenu';
-import FontFamily from './FontFamily';
+
 import { CustomIconComponentProps } from '@ant-design/icons/lib/components/Icon';
+import HeadingMenu from '@components/richTextEditor/ToolMenu/HeadingMenu';
+import FontFamily from '@components/richTextEditor/ToolMenu/FontFamily';
 
 const VerticalDivider = (): JSX.Element => {
   return (
@@ -41,19 +42,19 @@ const JustifyContentSvg = () => (
     xmlns="http://www.w3.org/2000/svg"
     transform="rotate(90)"
   >
-    <g id="SVGRepo_bgCarrier" stroke-width="0" />
+    <g id="SVGRepo_bgCarrier" strokeWidth="0" />
 
     <g
       id="SVGRepo_tracerCarrier"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
 
     <g id="SVGRepo_iconCarrier">
       {' '}
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M2.14998 14V1H0.849976V14H2.14998ZM6.14998 14V1H4.84998V14H6.14998ZM10.15 1V14H8.84998V1H10.15ZM14.15 14V1H12.85V14H14.15Z"
         fill="#000000"
       />{' '}

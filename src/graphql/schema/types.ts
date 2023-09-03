@@ -1,4 +1,4 @@
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -14,23 +14,59 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  EditorJSON: { input: any; output: any; }
 };
 
 export type Document = {
   __typename?: 'Document';
+  createdAt: Scalars['Float']['output'];
+  createdBy?: Maybe<Scalars['String']['output']>;
+  documentJSON?: Maybe<Scalars['EditorJSON']['output']>;
   id: Scalars['ID']['output'];
+  isPublic?: Maybe<Scalars['Boolean']['output']>;
+  sharedTo?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   title?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['Float']['output']>;
+};
+
+export type DocumentInput = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+  sharedTo?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  title: Scalars['String']['input'];
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  createDocument?: Maybe<Document>;
+  deleteDocument?: Maybe<Scalars['Boolean']['output']>;
+  updateDocument?: Maybe<Document>;
+};
+
+
+export type MutationCreateDocumentArgs = {
+  documentInput: DocumentInput;
+};
+
+
+export type MutationDeleteDocumentArgs = {
+  documentId: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdateDocumentArgs = {
+  documentInput: DocumentInput;
 };
 
 export type Query = {
   __typename?: 'Query';
-  documents?: Maybe<Document>;
+  document?: Maybe<Document>;
+  documentList?: Maybe<Array<Maybe<Document>>>;
   user?: Maybe<User>;
 };
 
 
-export type QueryDocumentsArgs = {
-  userId: Scalars['ID']['input'];
+export type QueryDocumentArgs = {
+  documentId: Scalars['ID']['input'];
 };
 
 
@@ -40,7 +76,7 @@ export type QueryUserArgs = {
 
 export type User = {
   __typename?: 'User';
-  email?: Maybe<Scalars['String']['output']>;
+  email: Scalars['String']['output'];
   firstname?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   lastname?: Maybe<Scalars['String']['output']>;
@@ -119,7 +155,11 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Document: ResolverTypeWrapper<Document>;
+  DocumentInput: DocumentInput;
+  EditorJSON: ResolverTypeWrapper<Scalars['EditorJSON']['output']>;
+  Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   User: ResolverTypeWrapper<User>;
@@ -129,25 +169,46 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   Document: Document;
+  DocumentInput: DocumentInput;
+  EditorJSON: Scalars['EditorJSON']['output'];
+  Float: Scalars['Float']['output'];
   ID: Scalars['ID']['output'];
+  Mutation: {};
   Query: {};
   String: Scalars['String']['output'];
   User: User;
 };
 
 export type DocumentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Document'] = ResolversParentTypes['Document']> = {
+  createdAt?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  createdBy?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  documentJSON?: Resolver<Maybe<ResolversTypes['EditorJSON']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isPublic?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  sharedTo?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export interface EditorJsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['EditorJSON'], any> {
+  name: 'EditorJSON';
+}
+
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  createDocument?: Resolver<Maybe<ResolversTypes['Document']>, ParentType, ContextType, RequireFields<MutationCreateDocumentArgs, 'documentInput'>>;
+  deleteDocument?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteDocumentArgs, 'documentId'>>;
+  updateDocument?: Resolver<Maybe<ResolversTypes['Document']>, ParentType, ContextType, RequireFields<MutationUpdateDocumentArgs, 'documentInput'>>;
+};
+
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  documents?: Resolver<Maybe<ResolversTypes['Document']>, ParentType, ContextType, RequireFields<QueryDocumentsArgs, 'userId'>>;
+  document?: Resolver<Maybe<ResolversTypes['Document']>, ParentType, ContextType, RequireFields<QueryDocumentArgs, 'documentId'>>;
+  documentList?: Resolver<Maybe<Array<Maybe<ResolversTypes['Document']>>>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'userId'>>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   firstname?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   lastname?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -156,6 +217,8 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type Resolvers<ContextType = any> = {
   Document?: DocumentResolvers<ContextType>;
+  EditorJSON?: GraphQLScalarType;
+  Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };

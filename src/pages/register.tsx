@@ -1,12 +1,14 @@
-import React from 'react';
-import RegistrationForm from '@components/Login/RegistrationForm';
+import React, { useCallback } from 'react';
+import RegistrationForm from '@components/login/RegistrationForm';
+import { GetServerSidePropsContext } from 'next';
+import redirectOnAuthenticated from '@utils/redirectOnAuthenticated';
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  return redirectOnAuthenticated(ctx);
+};
 
 const Register = (): JSX.Element => {
-  const onSubmit = (values: any) => {
-    console.log('Received values of form: ', values);
-  };
-
-  return <RegistrationForm onSubmit={onSubmit} />;
+  return <RegistrationForm />;
 };
 
 export default Register;

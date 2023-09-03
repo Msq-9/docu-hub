@@ -59,11 +59,8 @@ const LoginForm = ({
               Log in
             </Button>
             <Form.Item>
-              <a className="float-left rtl:float-right" href="/register">
+              <a className="float-right rtl:float-left mt-3" href="/register">
                 Register now!
-              </a>
-              <a className="float-right rtl:float-left" href="">
-                Forgot password?
               </a>
             </Form.Item>
           </Form.Item>

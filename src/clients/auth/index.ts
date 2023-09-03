@@ -1,5 +1,3 @@
-import { AugmentedRequest, RESTDataSource } from '@apollo/datasource-rest';
-import { ValueOrPromise } from '@apollo/datasource-rest/dist/RESTDataSource';
 import config from 'config';
 
 type AuthInfo = {
@@ -10,29 +8,46 @@ type AuthInfo = {
   message?: string;
 };
 
-class AuthClient extends RESTDataSource {
-  constructor() {
-    super();
-    this.baseURL = config.get('docuHubApiURL');
-  }
+class AuthClient {
+  private baseURL;
+  private commonHeaders;
 
-  protected willSendRequest(
-    path: string,
-    requestOpts: AugmentedRequest
-  ): ValueOrPromise<void> {
-    requestOpts.headers['Authorization'] = `api_key ${config.get('api_key')}`;
+  constructor() {
+    this.baseURL = config.get('docuHubApiURL');
+    this.commonHeaders = {
+      Authorization: `api_key ${config.get('api_key')}`,
+      'Content-Type': 'application/json'
+    };
   }
 
   async login(username: string, password: string): Promise<AuthInfo> {
-    return await this.post<AuthInfo>('login', {
-      body: { email: username, password }
+    const response = await fetch(`${this.baseURL}login`, {
+      method: 'POST',
+      headers: this.commonHeaders,
+      body: JSON.stringify({ email: username, password })
     });
+    return await response.json();
   }
 
   async validateToken(token: string): Promise<AuthInfo> {
-    return await this.get<AuthInfo>('auth/verify', {
+    const response = await fetch(`${this.baseURL}auth/verify`, {
       headers: { Authorization: token }
     });
+    return await response.json();
+  }
+
+  async register(
+    firstname: string,
+    lastname: string,
+    email: string,
+    password: string
+  ): Promise<AuthInfo> {
+    const response = await fetch(`${this.baseURL}register`, {
+      method: 'POST',
+      headers: this.commonHeaders,
+      body: JSON.stringify({ email, password, firstname, lastname })
+    });
+    return await response.json();
   }
 }
 

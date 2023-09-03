@@ -34,9 +34,11 @@ export default function authDirective(authClient: AuthClient) {
                 info
               ) {
                 try {
-                  context.user = await authClient.validateToken(
-                    context.req.headers['authorization']
-                  );
+                  if (methods[0] === 'BEARER') {
+                    context.user = await authClient.validateToken(
+                      context.req.headers['authorization']
+                    );
+                  }
                 } catch (err) {
                   if (err instanceof Error) throw new Error(err.message);
                   throw new Error('Unauthorized request');
