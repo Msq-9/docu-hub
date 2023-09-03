@@ -79,10 +79,12 @@ const RichTextEditor = ({
           value={rtDocName}
           bordered={false}
           onChange={(evt) => {
+            evt.preventDefault();
             setRTDocName(evt.target.value);
           }}
           onBlur={async (evt) => {
-            const updatedDoc = await updateRTDocument({
+            evt.preventDefault();
+            await updateRTDocument({
               variables: {
                 documentInput: { title: evt.target.value, id: documentData.id }
               }

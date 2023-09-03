@@ -13,7 +13,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (loginRes.token) {
       // Store auth token in cookies
-      setAuthCookies(res, loginRes.token);
+      setAuthCookies({ res, token: loginRes.token });
       return res.status(200).json(loginRes);
     }
 

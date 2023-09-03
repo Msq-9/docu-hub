@@ -13,6 +13,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       )}=; HttpOnly; Path=/;expires=${expiryTime}` // Using httpOnly to restrict access to browser-side scripts for security reasons
     ]);
 
+    setAuthCookies({ res, deleteCookie: true });
+
     return res.status(200).json({ message: 'logout successful' });
   } catch (err) {
     console.log(err);

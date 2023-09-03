@@ -15,8 +15,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (registerRes.token) {
       // Store auth token in cookies
-      // Store auth token in cookies
-      setAuthCookies(res, registerRes.token);
+      setAuthCookies({ res, token: registerRes.token });
       return res.status(200).json(registerRes);
     }
 
