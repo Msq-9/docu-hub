@@ -1,4 +1,15 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const config = require('config');
 
-module.exports = nextConfig
+const nextConfig = {
+  publicRuntimeConfig: {
+    // Will be available on both server and client
+    docuHubApiURL: config.get('docuHubApiURL'),
+    authTokenCookieName: config.get('authTokenCookieName')
+  },
+  devIndicators: {
+    buildActivityPosition: 'bottom-right'
+  }
+};
+
+module.exports = nextConfig;

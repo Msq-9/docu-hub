@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 export default gql`
   type Query {
-    user(userId: ID!): User @auth(methods: [BEARER])
+    user(addAuth: Boolean): User @auth(methods: [BEARER])
   }
 
   type User {
@@ -10,5 +10,6 @@ export default gql`
     firstname: String
     lastname: String
     email: String!
+    token: String
   }
 `;

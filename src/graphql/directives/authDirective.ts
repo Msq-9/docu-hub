@@ -3,6 +3,7 @@ import AuthClient from '@clients/auth';
 import { MapperKind, getDirective, mapSchema } from '@graphql-tools/utils';
 import { GraphQLSchema, defaultFieldResolver } from 'graphql';
 
+// Referred from https://the-guild.dev/graphql/tools/docs/schema-directives#enforcing-access-permissions
 export default function authDirective(authClient: AuthClient) {
   const directiveName = 'auth';
   const typeDirectiveArgumentMaps: Record<string, any> = {};

@@ -14,7 +14,7 @@ import {
 
 const createGraphqlClient = () => {
   const GqlServerLink = new HttpLink({
-    uri: 'http://localhost:3000/api/graphql',
+    uri: '/api/graphql',
     credentials: 'include'
   });
 
