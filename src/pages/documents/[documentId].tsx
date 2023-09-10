@@ -1,12 +1,14 @@
 import Editor from '@components/richTextEditor/Editor';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { GetServerSidePropsContext } from 'next';
 import isAuthenticated from '@utils/isAuthenticated';
 import { getDocumentById } from '@operations/document';
 import { useQuery } from '@apollo/client';
 import { Spin } from 'antd';
+// import { SocketProvider } from '@components/SocketProvider';
+// import useSocketIO from '@hooks/useSocketIO';
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   return isAuthenticated(ctx);
