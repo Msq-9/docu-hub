@@ -15,6 +15,8 @@ import { Document } from '@schema/types';
 import { useMutation } from '@apollo/client';
 import { updateRichTextDocument } from '@operations/document';
 import useSocketIO from '@hooks/useSocketIO';
+import Collaboration from '@tiptap/extension-collaboration';
+import * as Y from 'yjs';
 
 const RichTextEditor = ({
   documentData
@@ -24,6 +26,8 @@ const RichTextEditor = ({
   const [rtDocName, setRTDocName] = useState<string>(
     documentData.title as string
   );
+
+  const ydoc = new Y.Doc();
 
   const [updateRTDocument] = useMutation(updateRichTextDocument);
 
@@ -53,7 +57,10 @@ const RichTextEditor = ({
       FontFamily.configure({
         types: ['textStyle']
       }),
-      TextStyle
+      TextStyle,
+      Collaboration.configure({
+        document: ydoc
+      })
     ],
     editorProps: {
       attributes: {

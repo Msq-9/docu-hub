@@ -6,7 +6,7 @@ import { getUserQuery } from '@operations/user';
 
 const { publicRuntimeConfig } = getConfig();
 
-const useSocketIO = (documentId: string): Socket | undefined => {
+const useSocketIO = (roomId: string): Socket | undefined => {
   const [socket, setSocket] = useState<Socket>();
 
   const { data, loading } = useQuery(getUserQuery, {
@@ -22,7 +22,7 @@ const useSocketIO = (documentId: string): Socket | undefined => {
           path: '/websockets',
           auth: { token: data.user.token },
           extraHeaders: { Authorization: data.user.token },
-          query: { documentId }
+          query: { documentId: roomId }
         })
       );
     }
