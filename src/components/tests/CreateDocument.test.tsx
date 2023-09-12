@@ -25,7 +25,7 @@ describe('CreateDocument', () => {
     ).toBeInTheDocument();
   });
 
-  it('new document is created when create document button is clicked', async () => {
+  it('button click creates new document', async () => {
     const documentId = randomUUID();
     const mocks = [
       {
