@@ -1,6 +1,6 @@
 import Editor from '@components/richTextEditor/Editor';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { GetServerSidePropsContext } from 'next';
 import isAuthenticated from '@utils/isAuthenticated';

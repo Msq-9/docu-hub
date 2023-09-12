@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, type CSSProperties } from 'react';
+import React, { useState } from 'react';
 import { EditorContent } from '@tiptap/react';
 import TopMenuBar from '@components/richTextEditor/ToolMenu/ToolMenuBar';
 import { useEditor, type Editor } from '@tiptap/react';
@@ -14,7 +14,7 @@ import { Input } from 'antd';
 import { Document } from '@schema/types';
 import { useMutation } from '@apollo/client';
 import { updateRichTextDocument } from '@operations/document';
-import { useRouter } from 'next/router';
+import useSocketIO from '@hooks/useSocketIO';
 
 const RichTextEditor = ({
   documentData
@@ -26,6 +26,8 @@ const RichTextEditor = ({
   );
 
   const [updateRTDocument] = useMutation(updateRichTextDocument);
+
+  const socket = useSocketIO(documentData.id);
 
   const editor = useEditor({
     extensions: [
@@ -59,7 +61,14 @@ const RichTextEditor = ({
           'bg-white border border-gray-300 relative px-docPad py-docPad h-docH w-docW mx-auto'
       }
     },
-    autofocus: false
+    autofocus: false,
+    content: documentData.documentJSON,
+    onUpdate: (updatedEditor) => {
+      socket?.emit('updateDocument', {
+        ...documentData,
+        documentJSON: updatedEditor.editor.getJSON()
+      });
+    }
   });
 
   if (!editor) {
