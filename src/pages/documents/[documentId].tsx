@@ -1,12 +1,13 @@
 import Editor from '@components/richTextEditor/Editor';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { GetServerSidePropsContext } from 'next';
 import isAuthenticated from '@utils/isAuthenticated';
 import { getDocumentById } from '@operations/document';
 import { useQuery } from '@apollo/client';
 import { Spin } from 'antd';
+import { getUserQuery } from '@operations/user';
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   return isAuthenticated(ctx);
@@ -20,7 +21,11 @@ const Document = (): JSX.Element => {
     variables: { documentId }
   });
 
-  if (loading && !data) {
+  const { data: userData, loading: loadingUserData } = useQuery(getUserQuery, {
+    variables: { addAuth: true }
+  });
+
+  if (loading || !data || !userData || loadingUserData) {
     return (
       <div className="my-80">
         <Spin tip="Loading" size="large">
@@ -30,7 +35,7 @@ const Document = (): JSX.Element => {
     );
   }
 
-  return <Editor documentData={data.document} />;
+  return <Editor documentData={data.document} userData={userData.user} />;
 };
 
 export default Document;

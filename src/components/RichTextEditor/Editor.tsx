@@ -11,27 +11,31 @@ import FontFamily from '@tiptap/extension-font-family';
 import TextStyle from '@tiptap/extension-text-style';
 import TopNavigationContainer from '@components/TopNavigationContainer';
 import { Input } from 'antd';
-import { Document } from '@schema/types';
-import { useMutation } from '@apollo/client';
+import { Document, User } from '@schema/types';
+import { useMutation, useQuery } from '@apollo/client';
 import { updateRichTextDocument } from '@operations/document';
-import useSocketIO from '@hooks/useSocketIO';
 import Collaboration from '@tiptap/extension-collaboration';
-import * as Y from 'yjs';
+import CollaborationCursor from '@tiptap/extension-collaboration-cursor';
+import useYSocketIOProvider from '@hooks/useYSocketIOProvider';
 
 const RichTextEditor = ({
-  documentData
+  documentData,
+  userData
 }: {
   documentData: Document;
+  userData: User;
 }): JSX.Element | null => {
   const [rtDocName, setRTDocName] = useState<string>(
     documentData.title as string
   );
 
-  const ydoc = new Y.Doc();
-
   const [updateRTDocument] = useMutation(updateRichTextDocument);
 
-  const socket = useSocketIO(documentData.id);
+  const [yDoc, YSocketProvider] = useYSocketIOProvider(userData, documentData);
+
+  // Shamelessly copied from https://stackoverflow.com/a/5092846
+  const randomHexColor =
+    '#' + ((Math.random() * 0xffffff) << 0).toString(16).padStart(6, '0');
 
   const editor = useEditor({
     extensions: [
@@ -42,7 +46,8 @@ const RichTextEditor = ({
             class: 'bg-gray-200 px-5'
           }
         },
-        heading: {}
+        heading: {},
+        history: false
       }),
       Underline,
       Link.configure({
@@ -59,7 +64,14 @@ const RichTextEditor = ({
       }),
       TextStyle,
       Collaboration.configure({
-        document: ydoc
+        document: YSocketProvider.doc
+      }),
+      CollaborationCursor.configure({
+        provider: YSocketProvider,
+        user: {
+          name: userData.email,
+          color: randomHexColor
+        }
       })
     ],
     editorProps: {
@@ -69,12 +81,11 @@ const RichTextEditor = ({
       }
     },
     autofocus: false,
-    content: documentData.documentJSON,
     onUpdate: (updatedEditor) => {
-      socket?.emit('updateDocument', {
-        ...documentData,
-        documentJSON: updatedEditor.editor.getJSON()
-      });
+      if (!yDoc) return;
+      const yMap = yDoc.getMap('data');
+      const editorJSON = updatedEditor.editor.getJSON();
+      yMap.set('data', editorJSON);
     }
   });
 
