@@ -1,7 +1,6 @@
 'use client';
 import React, { useState } from 'react';
 import { EditorContent } from '@tiptap/react';
-import TopMenuBar from '@components/richTextEditor/ToolMenu/ToolMenuBar';
 import { useEditor, type Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
@@ -17,6 +16,7 @@ import { updateRichTextDocument } from '@operations/document';
 import Collaboration from '@tiptap/extension-collaboration';
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor';
 import useYSocketIOProvider from '@hooks/useYSocketIOProvider';
+import TopMenuBar from './ToolMenu/ToolMenuBar';
 
 const RichTextEditor = ({
   documentData,
