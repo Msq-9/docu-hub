@@ -1,16 +1,15 @@
-import config from 'config';
 import { NextApiRequest, NextApiResponse } from 'next';
-import AuthClient from '@clients/auth';
+import getConfig from 'next/config';
 import setAuthCookies from '@utils/setAuthCookies';
+
+const { publicRuntimeConfig } = getConfig();
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const expiryTime = new Date(Date.now() - 3600 * 1000).toUTCString(); // setting expiry time to 1hr before current time
     // Delete auth token stored in cookies
     res.setHeader('Set-Cookie', [
-      `${config.get(
-        'authTokenCookieName'
-      )}=; HttpOnly; Path=/;expires=${expiryTime}` // Using httpOnly to restrict access to browser-side scripts for security reasons
+      `${publicRuntimeConfig.authTokenCookieName}=; HttpOnly; Path=/;expires=${expiryTime}` // Using httpOnly to restrict access to browser-side scripts for security reasons
     ]);
 
     setAuthCookies({ res, deleteCookie: true });

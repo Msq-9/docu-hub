@@ -1,13 +1,15 @@
 import { AugmentedRequest, RESTDataSource } from '@apollo/datasource-rest';
 import { ValueOrPromise } from '@apollo/datasource-rest/dist/RESTDataSource';
 import { Document, DocumentInput, User } from '@schema/types';
-import config from 'config';
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig } = getConfig();
 
 class DocuHubAPI extends RESTDataSource {
   private token: string;
   constructor(options: { token: string }) {
     super();
-    this.baseURL = config.get('docuHubApiURL');
+    this.baseURL = publicRuntimeConfig.docuHubApiURL as string;
     this.token = options.token;
   }
 
