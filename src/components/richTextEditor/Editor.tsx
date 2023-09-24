@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { EditorContent } from '@tiptap/react';
 import TopMenuBar from '@components/richTextEditor/ToolMenu/ToolMenuBar';
-import { useEditor, type Editor } from '@tiptap/react';
+import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import Link from '@tiptap/extension-link';
