@@ -1,5 +1,7 @@
-import config from 'config';
 import { NextApiResponse } from 'next';
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig } = getConfig();
 
 export default function ({
   res,
@@ -17,8 +19,8 @@ export default function ({
 
   // Store auth token in cookies
   res.setHeader('Set-Cookie', [
-    `${config.get(
-      'authTokenCookieName'
-    )}=${token}; HttpOnly; Secure=true; Path=/;expires=${expiresIn}` // Using httpOnly to restrict access to browser-side scripts for security reasons
+    `${
+      publicRuntimeConfig.authTokenCookieName as string
+    }=${token}; HttpOnly; Secure=true; Path=/;expires=${expiresIn}` // Using httpOnly to restrict access to browser-side scripts for security reasons
   ]);
 }

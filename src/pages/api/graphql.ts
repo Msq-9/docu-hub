@@ -9,8 +9,10 @@ import { documentsResolver } from '@resolvers/documents';
 import authDirective from '@directives/authDirective';
 import { NextApiRequest, NextApiResponse } from 'next';
 import AuthClient from '@clients/auth';
-import config from 'config';
 import DocuHubApi from '@datasources/DocuHubApi';
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig } = getConfig();
 
 interface GraphQlContext extends Context {
   req: NextApiRequest;
@@ -35,7 +37,8 @@ export default startServerAndCreateNextHandler(apolloServer, {
   // required to update req/res headers at graphql resolvers and clients
   context: async (req: NextApiRequest, res: NextApiResponse) => {
     // Add auth token from cookies to request header
-    const authCookie = req.cookies[config.get('authTokenCookieName') as string];
+    const authCookie =
+      req.cookies[publicRuntimeConfig.authTokenCookieName as string];
     req.headers = {
       ...req.headers,
       authorization: req.headers['authorization'] || authCookie
