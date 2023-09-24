@@ -1,5 +1,4 @@
 import { GetServerSidePropsContext } from 'next';
-import config from 'config';
 import AuthClient from '@clients/auth';
 
 import getConfig from 'next/config';
