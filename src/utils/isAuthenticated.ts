@@ -1,6 +1,5 @@
 import { GetServerSidePropsContext } from 'next';
 import AuthClient from '@clients/auth';
-
 import getConfig from 'next/config';
 
 const { publicRuntimeConfig } = getConfig();
