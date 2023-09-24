@@ -1,7 +1,7 @@
 {
-    "environment": "dev",
+    "environment": "production",
     "port": 4000,
-    "api_key": "a1b2c33d4e5f6g7h8i9jakblc",
-    "docuHubApiURL": "http://43.204.148.60:8000/",
+    "api_key": "",
+    "docuHubApiURL": "",
     "authTokenCookieName": "AUTH_TOKEN"
 }
