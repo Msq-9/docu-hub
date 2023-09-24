@@ -21,6 +21,7 @@ const TopNavigationContainer = ({
     try {
       await fetch('/api/logout');
       client.resetStore();
+      router.push('/login');
     } catch {
       setHasError(true);
     }
