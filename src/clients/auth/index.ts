@@ -1,4 +1,6 @@
-import config from 'config';
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig } = getConfig();
 
 type AuthInfo = {
   email?: string;
@@ -13,9 +15,9 @@ class AuthClient {
   private commonHeaders;
 
   constructor() {
-    this.baseURL = config.get('docuHubApiURL');
+    this.baseURL = publicRuntimeConfig.docuHubApiURL as string;
     this.commonHeaders = {
-      Authorization: `api_key ${config.get('api_key')}`,
+      Authorization: `api_key ${publicRuntimeConfig.api_key as string}`,
       'Content-Type': 'application/json'
     };
   }

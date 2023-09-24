@@ -1,6 +1,4 @@
 import { GetServerSidePropsContext } from 'next';
-import config from 'config';
-import AuthClient from '@clients/auth';
 import isAuthenticated from './isAuthenticated';
 
 const redirectOnAuthenticated = async (ctx: GetServerSidePropsContext) => {

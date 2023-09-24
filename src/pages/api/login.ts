@@ -1,4 +1,3 @@
-import config from 'config';
 import { NextApiRequest, NextApiResponse } from 'next';
 import AuthClient from '@clients/auth';
 import setAuthCookies from '@utils/setAuthCookies';
