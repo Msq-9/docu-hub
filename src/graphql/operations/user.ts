@@ -11,3 +11,14 @@ export const getUserQuery = gql`
     }
   }
 `;
+
+export const getAllUsersQuery = gql`
+  query getAllUsers {
+    listUsers {
+      id
+      firstname
+      lastname
+      email
+    }
+  }
+`;

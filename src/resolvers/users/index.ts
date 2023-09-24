@@ -13,6 +13,19 @@ export const userResolver: Resolvers = {
         ];
       const user = await docuHubApi.getUserById(contextValue.user.id);
       return args.addAuth ? { ...user, token: authCookie } : user;
+    },
+    listUsers: async (
+      parent,
+      args,
+      contextValue,
+      info
+    ): Promise<Array<User>> => {
+      const docuHubApi = contextValue.datasources.docuHubApi;
+      const authCookie =
+        contextValue.req.cookies[
+          publicRuntimeConfig.authTokenCookieName as string
+        ];
+      return await docuHubApi.getAllUsers();
     }
   }
 };

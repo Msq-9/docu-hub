@@ -31,7 +31,7 @@ export const getDocumentById = gql`
 `;
 
 export const createRichTextDocument = gql`
-  mutation createDocument($documentInput: DocumentInput!) {
+  mutation createDocument($documentInput: CreateDocumentInput!) {
     createDocument(documentInput: $documentInput) {
       id
       title

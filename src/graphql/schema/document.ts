@@ -7,7 +7,7 @@ export default gql`
   }
 
   type Mutation {
-    createDocument(documentInput: DocumentInput!): Document
+    createDocument(documentInput: CreateDocumentInput!): Document
       @auth(methods: [BEARER])
     deleteDocument(documentId: ID!): Boolean @auth(methods: [BEARER])
     updateDocument(documentInput: DocumentInput!): Document
@@ -27,9 +27,13 @@ export default gql`
     documentJSON: EditorJSON
   }
 
+  input CreateDocumentInput {
+    title: String
+  }
+
   input DocumentInput {
-    id: ID
-    title: String!
+    id: ID!
+    title: String
     sharedTo: [String]
   }
 `;
