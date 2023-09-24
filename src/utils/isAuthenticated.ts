@@ -2,9 +2,14 @@ import { GetServerSidePropsContext } from 'next';
 import config from 'config';
 import AuthClient from '@clients/auth';
 
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig } = getConfig();
+
 const isAuthenticated = async (ctx: GetServerSidePropsContext) => {
   const { req, res } = ctx;
-  const authCookieName: string = config.get('authTokenCookieName');
+  const authCookieName: string =
+    publicRuntimeConfig.authTokenCookieName as string;
   const authToken = req.cookies[authCookieName];
   const authClient = new AuthClient();
   try {
