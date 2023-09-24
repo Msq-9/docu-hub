@@ -9,7 +9,7 @@ const isAuthenticated = async (ctx: GetServerSidePropsContext) => {
   const authClient = new AuthClient();
   try {
     const user = await authClient.validateToken(authToken || '');
-    if (!user) {
+    if (!user.token) {
       return {
         redirect: {
           destination: '/login'

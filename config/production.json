@@ -1,0 +1,7 @@
+{
+    "environment": "production",
+    "port": 4000,
+    "api_key": "",
+    "docuHubApiURL": "",
+    "authTokenCookieName": "AUTH_TOKEN"
+}

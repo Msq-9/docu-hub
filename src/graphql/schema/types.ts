@@ -17,6 +17,10 @@ export type Scalars = {
   EditorJSON: { input: any; output: any; }
 };
 
+export type CreateDocumentInput = {
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type Document = {
   __typename?: 'Document';
   createdAt: Scalars['Float']['output'];
@@ -30,9 +34,9 @@ export type Document = {
 };
 
 export type DocumentInput = {
-  id?: InputMaybe<Scalars['ID']['input']>;
+  id: Scalars['ID']['input'];
   sharedTo?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  title: Scalars['String']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Mutation = {
@@ -44,7 +48,7 @@ export type Mutation = {
 
 
 export type MutationCreateDocumentArgs = {
-  documentInput: DocumentInput;
+  documentInput: CreateDocumentInput;
 };
 
 
@@ -61,6 +65,7 @@ export type Query = {
   __typename?: 'Query';
   document?: Maybe<Document>;
   documentList?: Maybe<Array<Maybe<Document>>>;
+  listUsers?: Maybe<Array<Maybe<User>>>;
   user?: Maybe<User>;
 };
 
@@ -155,6 +160,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  CreateDocumentInput: CreateDocumentInput;
   Document: ResolverTypeWrapper<Document>;
   DocumentInput: DocumentInput;
   EditorJSON: ResolverTypeWrapper<Scalars['EditorJSON']['output']>;
@@ -169,6 +175,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
+  CreateDocumentInput: CreateDocumentInput;
   Document: Document;
   DocumentInput: DocumentInput;
   EditorJSON: Scalars['EditorJSON']['output'];
@@ -205,6 +212,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   document?: Resolver<Maybe<ResolversTypes['Document']>, ParentType, ContextType, RequireFields<QueryDocumentArgs, 'documentId'>>;
   documentList?: Resolver<Maybe<Array<Maybe<ResolversTypes['Document']>>>, ParentType, ContextType>;
+  listUsers?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, Partial<QueryUserArgs>>;
 };
 

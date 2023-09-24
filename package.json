@@ -21,6 +21,7 @@
     "@as-integrations/next": "^2.0.2",
     "@graphql-tools/schema": "^10.0.0",
     "@graphql-tools/utils": "^10.0.5",
+    "@graphql-typed-document-node/core": "^3.2.0",
     "@tiptap/extension-bullet-list": "^2.0.4",
     "@tiptap/extension-code-block": "^2.0.4",
     "@tiptap/extension-collaboration": "^2.1.8",

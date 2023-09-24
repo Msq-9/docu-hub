@@ -20,7 +20,12 @@ export const documentsResolver: Resolvers = {
     },
     document: async (parent, args, contextValue, info): Promise<Document> => {
       const docuHubApi = contextValue.datasources.docuHubApi;
-      return await docuHubApi.getRichTextDocById(args.documentId);
+      const document = await docuHubApi.getRichTextDocById(args.documentId);
+      return {
+        ...document,
+        createdBy:
+          contextValue.user.firstname + ' ' + contextValue.user.lastname
+      };
     }
   },
   Mutation: {
@@ -49,7 +54,12 @@ export const documentsResolver: Resolvers = {
       info
     ): Promise<Document> => {
       const docuHubApi = contextValue.datasources.docuHubApi;
-      return await docuHubApi.updateDocument(args.documentInput);
+      const document = await docuHubApi.updateDocument(args.documentInput);
+      return {
+        ...document,
+        createdBy:
+          contextValue.user.firstname + ' ' + contextValue.user.lastname
+      };
     }
   }
 };

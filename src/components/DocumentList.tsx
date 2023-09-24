@@ -1,14 +1,54 @@
-import { useMutation, useQuery } from '@apollo/client';
-import { deleteRichTextDocument, getDocumentList } from '@operations/document';
-import { Document } from '@schema/types';
-import { Spin, List, Skeleton, Modal } from 'antd';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
+import {
+  deleteRichTextDocument,
+  getDocumentById,
+  getDocumentList,
+  updateRichTextDocument
+} from '@operations/document';
+import { getAllUsersQuery } from '@operations/user';
+import { Document, User } from '@schema/types';
+import { Spin, List, Skeleton, Modal, Select, Alert, SelectProps } from 'antd';
+import { DefaultOptionType } from 'antd/es/select';
 import { useState } from 'react';
 
 const DocumentList = (): JSX.Element => {
   const { data, loading } = useQuery(getDocumentList);
+  const [userOptions, setUserOptions] = useState<
+    Array<{
+      label: string;
+      value: string;
+    }>
+  >([]);
+  const [sharedUsers, setSharedUsers] = useState<Array<string>>([]);
 
   const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] =
     useState(false);
+  const [currDocId, setCurrDocId] = useState('');
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+
+  const { data: listUsers, loading: loadingUsersList } = useQuery(
+    getAllUsersQuery,
+    {
+      onCompleted: (data) => {
+        const userList: Array<{ label: string; value: string }> = [];
+        data.listUsers?.forEach((user: User) => {
+          userList.push({
+            label: user.firstname + ' ' + user.lastname,
+            value: user.id
+          });
+        });
+        setUserOptions(userList);
+      }
+    }
+  );
+
+  const [getDocument, { loading: loadingDocument, data: documentData }] =
+    useLazyQuery(getDocumentById, {
+      onCompleted: (data) => {
+        setSharedUsers(data.document.sharedTo);
+      }
+    });
 
   const [itemToDelete, setItemToDelete] = useState<Document>();
 
@@ -16,13 +56,23 @@ const DocumentList = (): JSX.Element => {
     deleteRichTextDocument,
     {
       refetchQueries: [{ query: getDocumentList }],
-      onCompleted: () => {
+      onCompleted: (data) => {
         setIsDeleteConfirmationModalOpen(false);
+        setAlertMessage(`Successfully deleted!`);
+      }
+    }
+  );
+  const [updateRTDocument, { loading: updatingDocument }] = useMutation(
+    updateRichTextDocument,
+    {
+      onCompleted: (data) => {
+        setIsShareModalOpen(false);
+        setAlertMessage(`Successfully shared "${data.updateDocument.title}" !`);
       }
     }
   );
 
-  if (loading && !data) {
+  if ((loading && !data) || (loadingUsersList && !listUsers)) {
     return (
       <div className="my-40">
         <Spin tip="Loading" size="large">
@@ -37,8 +87,58 @@ const DocumentList = (): JSX.Element => {
     updatedAt: new Date(doc.updatedAt || doc.createdAt).toDateString()
   }));
 
+  // Filter `option.label` match the user type `input`
+  const filterOption = (input: string, option?: DefaultOptionType) => {
+    return ((option?.label ?? '') as string)
+      .toLowerCase()
+      .includes(input.toLowerCase());
+  };
+
+  const selectProps: SelectProps = {
+    mode: 'multiple',
+    style: { width: '100%' },
+    value: userOptions.filter((user) => sharedUsers.indexOf(user.value) >= 0),
+    options: userOptions,
+    filterOption: (input, option) => {
+      return filterOption(input, option);
+    },
+    onChange: (newValue: string[]) => {
+      setSharedUsers(newValue);
+    },
+    placeholder: 'Select Users...',
+    maxTagCount: 'responsive'
+  };
+
   return (
     <div className="mx-10 px-10">
+      {alertMessage && (
+        <Alert type="success" showIcon message={alertMessage} closable />
+      )}
+      <Modal
+        title={`Share "${documentData?.document?.title}" with`}
+        open={isShareModalOpen}
+        confirmLoading={updatingDocument}
+        onOk={async (evt) => {
+          evt.preventDefault();
+          await updateRTDocument({
+            variables: {
+              documentInput: { sharedTo: sharedUsers, id: currDocId }
+            }
+          });
+        }}
+        onCancel={() => {
+          setIsShareModalOpen(false);
+        }}
+      >
+        {(loadingUsersList || loadingDocument) && (
+          <div className="my-40">
+            <Spin tip="Loading" size="large">
+              <div className="content" />
+            </Spin>
+          </div>
+        )}
+        {!loadingUsersList && !loadingDocument && <Select {...selectProps} />}
+      </Modal>
       <Modal
         title={`Confirm deleting '${itemToDelete?.title}'`}
         open={isDeleteConfirmationModalOpen}
@@ -62,7 +162,19 @@ const DocumentList = (): JSX.Element => {
           <List.Item
             actions={[
               <a href={`/documents/${item.id}`}>edit</a>,
-              <a>share</a>,
+              <a
+                onClick={async () => {
+                  await getDocument({
+                    variables: {
+                      documentId: item.id
+                    }
+                  });
+                  setCurrDocId(item.id);
+                  setIsShareModalOpen(true);
+                }}
+              >
+                share
+              </a>,
               <a
                 className="text-red-600"
                 onClick={() => {

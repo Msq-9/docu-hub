@@ -40,7 +40,7 @@ class DocuHubAPI extends RESTDataSource {
 
   async updateDocument(documentData: DocumentInput): Promise<Document> {
     return this.put<Document>(`documents/${documentData.id}`, {
-      body: { title: documentData.title }
+      body: { title: documentData.title, sharedTo: documentData.sharedTo }
     });
   }
 
