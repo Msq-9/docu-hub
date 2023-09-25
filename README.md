@@ -1,34 +1,26 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## DocuHub
+A collaborative rich text editor with real-time collaboration features.
+
+## Description
+DocuHub is an innovative real-time collaborative rich text editor designed for seamless teamwork and efficient document editing. Built with modern technologies and a focus on user experience, it enables users to share their documents with each other to collaborate in real-time, making it ideal for collaborative writing, brainstorming, and project management.
+Users can register themselves and log in using the credentials which are securely encrypted. DocuHub achieves real-time updates through Socket.IO web sockets, allowing multiple users to interact with documents simultaneously. Say goodbye to delays in collaborative editing. It also leverages Yjs, a Conflict-free Replicated Data Type (CRDT) algorithm, to provide conflict-free collaborative editing. This revolutionary approach eliminates traditional conflicts, offering a smoother and more efficient collaborative experience.
 
 ## Getting Started
+You may also need to run the backend service [docu-hub-api](https://github.com/Msq-9/docu-hub-api) for local development.
 
 First, run the development server:
+```bash
+npm install
+# or
+pnpm install
+```
+Now, run the development server:
 
 ```bash
 npm run dev
 # or
-yarn dev
-# or
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000/login](http://localhost:3000/login) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
