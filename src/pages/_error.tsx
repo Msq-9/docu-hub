@@ -6,11 +6,11 @@ import { useRouter } from 'next/router';
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const { res, resolvedUrl } = ctx;
   const statusCode = res ? res.statusCode : 500;
-
+  console.log('mmenpadi1 resolvedUrl', resolvedUrl);
   if (resolvedUrl === '/') {
     return {
       redirect: {
-        destination: '/login'
+        destination: 'login'
       }
     };
   }
