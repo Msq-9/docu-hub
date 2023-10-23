@@ -14,6 +14,7 @@ const LoginForm = ({
 }): JSX.Element => {
   const [hasError, sethasError] = useState(false);
   const [loginErrorMsg, setLoginErrorMsg] = useState('');
+  const [loading, setLoading] = useState(false);
 
   return (
     <div className="bg-gray-100 my-52 mx-auto flex justify-center min-w-fit h-fit max-w-lg rounded-xl">
@@ -30,6 +31,7 @@ const LoginForm = ({
           className="w-80 lg:w-96 "
           initialValues={{ remember: true }}
           onFinish={(values) => {
+            setLoading(true);
             onSubmit(values, sethasError, setLoginErrorMsg);
           }}
         >
@@ -55,7 +57,12 @@ const LoginForm = ({
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" className="mt-5 w-full">
+            <Button
+              loading={loading}
+              type="primary"
+              htmlType="submit"
+              className="mt-5 w-full"
+            >
               Log in
             </Button>
             <Form.Item>

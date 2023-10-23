@@ -7,7 +7,16 @@ import {
 } from '@operations/document';
 import { getAllUsersQuery } from '@operations/user';
 import { Document, User } from '@schema/types';
-import { Spin, List, Skeleton, Modal, Select, Alert, SelectProps } from 'antd';
+import {
+  Spin,
+  List,
+  Skeleton,
+  Modal,
+  Select,
+  Alert,
+  SelectProps,
+  Button
+} from 'antd';
 import { DefaultOptionType } from 'antd/es/select';
 import { useState } from 'react';
 
@@ -56,7 +65,7 @@ const DocumentList = (): JSX.Element => {
     deleteRichTextDocument,
     {
       refetchQueries: [{ query: getDocumentList }],
-      onCompleted: (data) => {
+      onCompleted: () => {
         setIsDeleteConfirmationModalOpen(false);
         setAlertMessage(`Successfully deleted!`);
       }
@@ -130,14 +139,7 @@ const DocumentList = (): JSX.Element => {
           setIsShareModalOpen(false);
         }}
       >
-        {(loadingUsersList || loadingDocument) && (
-          <div className="my-40">
-            <Spin tip="Loading" size="large">
-              <div className="content" />
-            </Spin>
-          </div>
-        )}
-        {!loadingUsersList && !loadingDocument && <Select {...selectProps} />}
+        <Select {...selectProps} />
       </Modal>
       <Modal
         title={`Confirm deleting '${itemToDelete?.title}'`}
@@ -161,29 +163,38 @@ const DocumentList = (): JSX.Element => {
         renderItem={(item: Document) => (
           <List.Item
             actions={[
-              <a href={`/documents/${item.id}`}>edit</a>,
-              <a
+              <Button size="small" type="link" href={`/documents/${item.id}`}>
+                edit
+              </Button>,
+              <Button
+                type="link"
+                size="small"
+                loading={
+                  (loadingUsersList || loadingDocument) && item.id == currDocId
+                }
                 onClick={async () => {
+                  setCurrDocId(item.id);
                   await getDocument({
                     variables: {
                       documentId: item.id
                     }
                   });
-                  setCurrDocId(item.id);
                   setIsShareModalOpen(true);
                 }}
               >
                 share
-              </a>,
-              <a
-                className="text-red-600"
+              </Button>,
+              <Button
+                type="link"
+                size="small"
+                danger
                 onClick={() => {
                   setItemToDelete(item);
                   setIsDeleteConfirmationModalOpen(true);
                 }}
               >
                 delete
-              </a>
+              </Button>
             ]}
           >
             <Skeleton avatar title={false} loading={loading} active>

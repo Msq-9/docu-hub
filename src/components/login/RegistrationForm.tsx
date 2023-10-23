@@ -35,6 +35,7 @@ const RegistrationForm = () => {
   const [hasError, sethasError] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [enableSubmit, setEnableSubmit] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   React.useEffect(() => {
     form.validateFields({ validateOnly: true }).then(
@@ -89,7 +90,10 @@ const RegistrationForm = () => {
           {...formItemLayout}
           form={form}
           name="register"
-          onFinish={(values) => onSubmit(values)}
+          onFinish={(values) => {
+            setLoading(true);
+            onSubmit(values);
+          }}
           initialValues={{}}
           className="w-regForm"
           scrollToFirstError
@@ -174,7 +178,12 @@ const RegistrationForm = () => {
             <Input.Password />
           </Form.Item>
           <Form.Item {...tailFormItemLayout}>
-            <Button type="primary" htmlType="submit" disabled={!enableSubmit}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              disabled={!enableSubmit}
+              loading={loading}
+            >
               Register
             </Button>
           </Form.Item>

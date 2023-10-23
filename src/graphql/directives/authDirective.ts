@@ -1,4 +1,3 @@
-import { ConsoleSqlOutlined } from '@ant-design/icons';
 import AuthClient from '@clients/auth';
 import { MapperKind, getDirective, mapSchema } from '@graphql-tools/utils';
 import { GraphQLSchema, defaultFieldResolver } from 'graphql';

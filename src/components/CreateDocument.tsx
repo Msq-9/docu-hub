@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 
 const CreateDocument = (): JSX.Element => {
   const router = useRouter();
-  const [createNewDocument] = useMutation(createRichTextDocument);
+  const [createNewDocument, { loading }] = useMutation(createRichTextDocument);
 
   return (
     <div className="flex flex-row mx-10 px-10 rounded-xl">
@@ -15,6 +15,7 @@ const CreateDocument = (): JSX.Element => {
         className="bg-gray-100 my-10"
         shape="round"
         size="large"
+        loading={loading}
         icon={<FileAddTwoTone />}
         onClick={async () => {
           const newDocument = await createNewDocument({

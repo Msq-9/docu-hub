@@ -10,21 +10,21 @@ export const documentsResolver: Resolvers = {
     ): Promise<Array<Document>> => {
       const docuHubApi = contextValue.datasources.docuHubApi;
       const docList = await docuHubApi.getDocumentsByUser(contextValue.user.id);
-      return docList.map((doc: Document) => {
+      return docList.map(async (doc: Document) => {
+        const user = await docuHubApi.getUserById(doc.createdBy);
         return {
           ...doc,
-          createdBy:
-            contextValue.user.firstname + ' ' + contextValue.user.lastname
+          createdBy: user.firstname + ' ' + user.lastname
         };
       });
     },
     document: async (parent, args, contextValue, info): Promise<Document> => {
       const docuHubApi = contextValue.datasources.docuHubApi;
       const document = await docuHubApi.getRichTextDocById(args.documentId);
+      const user = await docuHubApi.getUserById(document.createdBy);
       return {
         ...document,
-        createdBy:
-          contextValue.user.firstname + ' ' + contextValue.user.lastname
+        createdBy: user.firstname + ' ' + user.lastname
       };
     }
   },
